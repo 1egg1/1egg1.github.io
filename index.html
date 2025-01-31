@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домашнее задание</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        input, button {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #218838;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: white;
+            padding: 10px;
+            margin: 5px auto;
+            max-width: 400px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Добавить домашнее задание</h1>
+    <form id="homeworkForm">
+        <input type="text" id="date" placeholder="Дата (ДД.ММ)" required>
+        <input type="text" id="subject" placeholder="Предмет" required>
+        <input type="text" id="task" placeholder="Задание" required>
+        <button type="submit">Добавить</button>
+    </form>
+    <h2>Список заданий</h2>
+    <ul id="homeworkList"></ul>
+
+    <script>
+        document.getElementById("homeworkForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const date = document.getElementById("date").value;
+            const subject = document.getElementById("subject").value;
+            const task = document.getElementById("task").value;
+            
+            let homework = JSON.parse(localStorage.getItem("homework")) || {};
+            if (!homework[date]) {
+                homework[date] = {};
+            }
+            homework[date][subject] = task;
+            localStorage.setItem("homework", JSON.stringify(homework));
+            renderHomework();
+        });
+
+        function renderHomework() {
+            const homework = JSON.parse(localStorage.getItem("homework")) || {};
+            const list = document.getElementById("homeworkList");
+            list.innerHTML = "";
+            for (const date in homework) {
+                for (const subject in homework[date]) {
+                    const li = document.createElement("li");
+                    li.textContent = `${date}: ${subject} - ${homework[date][subject]}`;
+                    list.appendChild(li);
+                }
+            }
+        }
+
+        renderHomework();
+    </script>
+</body>
+</html>
